@@ -44,3 +44,5 @@ hystrix:
                 rollingStats:
                     numBuckets : 12
                     timeInMilliseconds : 1440
+bookstore:
+    uri: http://localhost:8090/recommended
