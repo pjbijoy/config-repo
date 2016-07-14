@@ -1,10 +1,3 @@
-server:
-    application:
-        name: bookstoreclient
-    profiles:
-        active: dev
-    port : 8080
-
 hystrix:
     command:
         BookServiceCommandKey:
