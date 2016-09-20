@@ -1,48 +1,12 @@
-destination : EJBRemote
-jndi:
-     name : CrsHome.v15
-ejb:
-    url : t3://crsvdev-wap.idev.fedex.com:7164
-service:
-    timeout:
-       threshold : 5
-       interval:
-             msecs : 30000
-    reset:
-        interval:
-             msecs : 20000			
-fast:
-    fail:
-        impl : timeout
-max:
-    concurrent:
-        connect:
-            attempts : 10
-        invoke:
-            attempts : 30
-cluster:
-    use:
-        type : PB
-    auto:
-        connection:
-            reconnect : true
-        timeout:
-            reconnect : false
-remote:
-    api:
-        id : APP41247
-token:
-    impl:
-         class : com.fedex.nxgen.servicefactory.v2.enterprise.LDAPAuthenticationProvider
 hystrix:
     command:
-        RateSoapWsCommandKey:
+        RateServiceCommandKey:
             execution:
                 isolation:
                     strategy : THREAD
                     maxConcurrentRequests : 10	        
                     thread:
-                        timeoutInMilliseconds : 1000
+                        timeoutInMilliseconds : 50000
                         interruptOnTimeout : true
                 timeout:
                     enabled : true
@@ -71,7 +35,7 @@ hystrix:
             requestLog:
                 enabled : true
     threadpool:
-        RateSoapWsThreadPoolKey:
+        RateServiceThreadPoolKey:
             coreSize : 10
             maxQueueSize : 101
             queueSizeRejectionThreshold : 5
@@ -80,3 +44,119 @@ hystrix:
                 rollingStats:
                     numBuckets : 12
                     timeInMilliseconds : 1440
+destination : EJBRemote
+jndi:
+     name : CrsHome.v15
+ejb:
+    url : t3://crsvdev-wap.idev.fedex.com:7164
+service:
+    timeout:
+       threshold : 5
+       interval:
+             msecs : 30000
+    reset:
+        interval:
+             msecs : 20000
+    application:
+         id: 393_CAPS	
+fast:
+    fail:
+        impl : timeout
+max:
+    concurrent:
+        connect:
+            attempts : 10
+        invoke:
+            attempts : 30
+cluster:
+    use:
+        type : PB
+    auto:
+        connection:
+            reconnect : true
+        timeout:
+            reconnect : false
+remote:
+    api:
+        id : APP41247
+token:
+    impl:
+         class : com.fedex.nxgen.servicefactory.v2.enterprise.LDAPAuthenticationProvider
+csr:
+     ws:
+         wsdl:
+             url: http://capscsrdev-wap.idev.fedex.com:5100/prof/prof.v4.wsdl
+         service:
+                 impl:
+                     class: com.fedex.nxgen.prof.v4.ientities.ProfService
+                 port:
+                    name: ProfSoap11
+                 namespace:
+                     uri: http://nxgen.fedex.com/prof/v4/ientities
+                 name: profService
+ws:
+     transport:
+         connection:
+             timeout:
+                 msecs: 5000
+         read:
+             timeout:
+                 msecs: 15000
+security:
+    api:
+         token:
+                safe:
+                     ttl: 3000
+                expiration:
+                     check: 300
+         client:
+             cert:
+               rotation:
+                     check: 300
+         server:
+             cert:
+                 rotation:
+                     check: 900
+         groups:
+             refresh: 3600
+             grs:
+                 url: http://dev-mygroups.corp.fedex.com:1904/wsso/mygroups
+                 readtimeout: 60
+                 conntimeout: 20
+         service:
+             cache: 200
+             policy:
+                 refresh: 300
+public:
+     key:
+         provider:
+             implementation: com.fedex.security.server.LdapCipherProviderImpl
+ldap:
+     url: ldap://dirdev.corp.fedex.com:389/ou=people,o=fedex,c=us
+     app:
+         id:
+             attr:
+                 name: uid
+     cert:
+         attr:
+             name: userCertificate
+     revoke:
+         attr:
+             name: FxAppSoxStatus
+     read:
+         timeout: 20
+     conn:
+         timeout: 20
+client:
+     keystore:
+         type: PKCS12
+         password: N1undzt0b97bDytJh3UVSZq8D
+         key:
+             alias: APP5528
+             password: N1undzt0b97bDytJh3UVSZq8D
+app:
+     id: 5528
+
+     name: WSGW
+framework:
+     version: 5.0.0
